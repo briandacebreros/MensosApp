@@ -3,7 +3,7 @@ import { StyleSheet, Text, TextInput, View, TouchableOpacity,
     Platform, ActivityIndicator, StatusBar, Button
     } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import axios from 'axios';
 const userInfo = {username: 'admin', password: 'pass12345'}
 export default class MyList extends Component {
     constructor(props) {
@@ -54,16 +54,40 @@ export default class MyList extends Component {
       )
     }
     _login = async() => {
-        //let history = useHistory();
-        if(userInfo.username === this.state.username && userInfo.password === this.state.password) {
-            //alert('Logged In');
-            await AsyncStorage.setItem('isLoggedIn','1');
-            //alert(storageSample);
-            this.props.navigation.navigate('List');
-        } else {
-            alert('Usuario o contrase;a es incorrecto.')
-        }
+      const sesion_estado = false;
+      const authenticate = () => {
+        axios
+          .post(
+            "https://new.mensos.es/solicitarenvio/usuario/principal/authentication",
+            JSON.stringify({
+              email: this.state.username,
+              password: this.state.password,
+            })
+          )
+          .then((response) => {
+            if ( response.data.result == 'true' ) {
+              this.sesion_estado = true;
+            } else {
+              this.sesion_estado = false;
+            }
+          }).catch((err) => {
+            console.log(err);
+        });
       }
+
+      
+      if( this.sesion_estado == false ) {
+        authenticate();
+      }
+      if( this.sesion_estado == true) {
+        await AsyncStorage.setItem('isLoggedIn','1');
+        this.props.navigation.navigate('List');
+      } else {
+        authenticate();
+        alert('Usuario o contraseña es incorrecto.')
+        console.log('Error en datos');
+      }
+    }
   }
   
   
@@ -130,7 +154,6 @@ export default class MyList extends Component {
         justifyContent: "space-between",
         width: "95%"
     }
-    
   });
   
   

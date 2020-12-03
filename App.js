@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, 
           Platform, ActivityIndicator, StatusBar, Button
@@ -13,10 +13,15 @@ import About from './pageComponents/About.js';
 import { render } from "react-dom";
 import MyList from './pageComponents/MyList.js';
 import Login from './pageComponents/Login.js';
+import axios from 'axios';
 
 
 
 const userInfo = {username: 'admin', password: 'pass12345'}
+
+
+
+
 class HomeScreen extends Component {
   static navigationOptions = {
     //header: null,
@@ -44,16 +49,8 @@ class HomeScreen extends Component {
     );
   }
 
-  _login = async() => {
-    //let history = useHistory();
-    if(userInfo.username === this.state.username && userInfo.password === this.state.password) {
-        //alert('Logged In');
-        await AsyncStorage.setItem('isLoggedIn','1');
-        this.props.navigation.navigate('List');
-    } else {
-        alert('Usuario o contrase;a es incorrecto.')
-    }
-  }
+  
+
 }
 
 class ListScreen extends Component {
